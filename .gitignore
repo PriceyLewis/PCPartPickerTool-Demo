@@ -1,0 +1,15 @@
+.idea/
+.deps/
+.tmp_lib/
+out/
+**/out/
+*.iml
+*.class
+*.backup.accdb
+
+# IDE-specific project files inside subfolders
+**/.idea/
+
+# Local OS/editor noise
+.DS_Store
+.vscode/
