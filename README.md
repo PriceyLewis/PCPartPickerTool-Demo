@@ -43,6 +43,13 @@ The original API-backed recommendation feature was removed for security reasons 
    - `ucanaccess-5.0.1.jar`
 3. Run `PCPartPicker/src/Main.java`.
 
+## Login Information
+
+- Create a new demo user from the Sign Up screen
+- Or log in with an existing User ID already stored in the sanitized demo database
+- Example demo User IDs: `1`, `2`, `3`
+- The employer-facing demo build does not expose the admin login screen
+
 ## Notes
 
 - The database content has been sanitized for public release.
