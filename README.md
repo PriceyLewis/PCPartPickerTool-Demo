@@ -1,64 +1,88 @@
 # PC Part Picker
 
-Desktop Java application for browsing PC components, comparing options across stores, and building a basket from a local product database.
+`PC Part Picker` is a Java Swing desktop app for browsing PC components, comparing store listings, getting simple local recommendations, and building a basket from a bundled Microsoft Access database.
 
-## Overview
-
-This project was cleaned up as a portfolio-ready demo build. It now runs fully locally against the bundled Access database and does not depend on any external API service.
-
-The original API-backed recommendation feature was removed for security reasons before publication. Recommendations are now generated from local database data only.
+This repository is set up as a local demo build. It does not require any external API or hosted backend.
 
 ## Features
 
-- Create or log into a demo user account
-- Browse parts with brand and price sorting
-- Search parts with keyword, brand, and price filters
-- Get local recommendation suggestions from the in-app assistant
+- Sign up for a demo account or log in with an existing user ID
+- Browse in-stock parts across stores
+- Filter parts by keyword, brand, and price range
+- Get local recommendation suggestions from the built-in assistant
 - Add parts to a basket and view a running total
 - Leave and read store reviews
-- View user search history
+- View recent user search history
 
 ## Tech Stack
 
 - Java
 - Swing
 - UCanAccess / Jackcess
-- Microsoft Access `.accdb` database
+- Microsoft Access (`.accdb`)
 
-## Project Structure
+## Project Layout
 
-- `PCPartPicker/src/Main.java` contains the main UI flows
-- `PCPartPicker/src/DatabaseAccess.java` contains database access logic
+- `PCPartPicker/src/Main.java` contains the main application flow and screens
+- `PCPartPicker/src/DatabaseAccess.java` handles database queries and updates
 - `PCPartPicker/src/PCPartAI.java` contains the local recommendation logic
-- `PCPartPicker/Database for App.accdb` is the sanitized demo database
+- `PCPartPicker/src/GUI.java` contains shared Swing helpers
+- `PCPartPicker/Database for App.accdb` is the bundled demo database
+- `lib/` contains the JDBC and Access-related dependencies required to run the app
 
-## Setup
+## Requirements
 
-1. Open the project in your Java IDE.
-2. Add these jars from `lib/` to the project libraries:
-   - `commons-lang3-3.8.1.jar`
-   - `commons-logging-1.2.jar`
-   - `hsqldb-2.5.0.jar`
-   - `jackcess-3.0.1.jar`
-   - `ucanaccess-5.0.1.jar`
-3. Run `PCPartPicker/src/Main.java`.
+- JDK 17 or later
+- Windows is the safest target environment because the app uses a bundled Microsoft Access database through UCanAccess
 
-## Login Information
+## Running The App
 
-- Create a new demo user from the Sign Up screen
-- Or log in with an existing User ID already stored in the sanitized demo database
-- Example demo User IDs: `1`, `2`, `3`
-- The employer-facing demo build does not expose the admin login screen
+### Option 1: Run from an IDE
+
+1. Open the repository in your Java IDE.
+2. Mark `PCPartPicker/src` as a source folder if needed.
+3. Add every JAR in `lib/` to the project classpath.
+4. Run `Main.java`.
+
+### Option 2: Run from the command line on Windows
+
+Compile:
+
+```powershell
+javac -cp "lib/*" -d out PCPartPicker/src/*.java
+```
+
+Run:
+
+```powershell
+java -cp "out;lib/*" Main
+```
+
+## Demo Login
+
+- You can create a new account from the Sign Up screen
+- You can also log in with an existing user ID already stored in the demo database
+- Example user IDs listed in the current README flow: `1`, `2`, `3`
 
 ## Notes
 
-- The database content has been sanitized for public release.
-- The employer-facing demo build does not expose the admin screen or any hardcoded admin password.
-- If your IDE reports missing JDBC classes, re-check the library setup above.
+- The app searches recursively for `Database for App.accdb`, so keep that file in the repository when moving the project
+- The app also searches recursively for `logo.png`, which is stored under `PCPartPicker/src/Assets/`
+- Recommendation responses are generated locally from the database contents
+- An admin dashboard exists in the codebase, but it is not part of the standard launch flow exposed to normal users
+- If JDBC or UCanAccess classes are missing at runtime, re-check that all JARs in `lib/` are on the classpath
 
-## Publishing
+## Repository Readiness
 
-The repo is prepared for GitHub upload. Optional polish before publishing:
+The repository already includes:
 
-- add screenshots to the README
+- source code
+- bundled demo database
+- bundled runtime dependencies
+- a `.gitignore`
+
+Good optional follow-ups before publishing:
+
+- add screenshots or a short demo GIF
 - add a license
+- add a short section on known limitations
