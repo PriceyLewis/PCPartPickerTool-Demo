@@ -1,73 +1,94 @@
 # PC Part Picker
 
-`PC Part Picker` is a Java Swing desktop app for browsing PC components, comparing store listings, getting simple local recommendations, and building a basket from a bundled Microsoft Access database.
+`PC Part Picker` is a Java Swing desktop application for browsing PC components, comparing store listings, using a local rule-based assistant, and building a basket from a bundled Microsoft Access database.
 
-This repository is set up as a local demo build. It does not require any external API or hosted backend.
+This repository is a self-contained portfolio demo. It does **not** require a cloud AI service, external API, or hosted backend.
+
+## What This Project Demonstrates
+
+- Java / object-oriented desktop development
+- Swing UI flows across multiple screens
+- JDBC-style database access through UCanAccess / Jackcess
+- Search, filtering, basket and account state
+- A deterministic local assistant for structured natural-language-style commands
+- Safer mutating actions that require user confirmation
+- Team software development and integration
 
 ## Features
 
 - Sign up for a demo account or log in with an existing user ID
 - Browse in-stock parts across stores
 - Filter parts by keyword, brand, and price range
-- Get local recommendation suggestions from the built-in assistant
+- Ask the built-in assistant to find, add, remove or clear parts
 - Add parts to a basket and view a running total
 - Leave and read store reviews
 - View recent user search history
 
+## My Contribution
+
+This began as team coursework. My main contribution included Java Swing application code, database-backed flows, and the assistant integration. The public repository is presented as a demo rather than implying that every original team feature was solely authored by me.
+
 ## Tech Stack
 
-- Java
+- Java 17+
 - Swing
 - UCanAccess / Jackcess
 - Microsoft Access (`.accdb`)
 
 ## Project Layout
 
-- `PCPartPicker/src/Main.java` contains the main application flow and screens
-- `PCPartPicker/src/DatabaseAccess.java` handles database queries and updates
-- `PCPartPicker/src/PCPartAI.java` contains the local recommendation logic
-- `PCPartPicker/src/GUI.java` contains shared Swing helpers
-- `PCPartPicker/Database for App.accdb` is the bundled demo database
-- `lib/` contains the JDBC and Access-related dependencies required to run the app
+- `PCPartPicker/src/Main.java` — main application flow and screens
+- `PCPartPicker/src/DatabaseAccess.java` — database queries and updates
+- `PCPartPicker/src/PCPartAI.java` — local assistant / recommendation logic
+- `PCPartPicker/src/GUI.java` — shared Swing helpers
+- `PCPartPicker/Database for App.accdb` — bundled demo database
+- `lib/` — JDBC and Access-related dependencies required by the demo
 
 ## Requirements
 
 - JDK 17 or later
-- Windows is the safest target environment because the app uses a bundled Microsoft Access database through UCanAccess
+- Windows is the safest target environment for the full UI/database demo because the project was developed around Microsoft Access through UCanAccess
 
-## Running The App
+## Quick Start
 
-### Option 1: Run from an IDE
+### Windows
+
+From the repository root:
+
+```powershell
+.\run-demo.bat
+```
+
+### Linux / macOS
+
+```bash
+chmod +x run-demo.sh
+./run-demo.sh
+```
+
+The shell launcher is useful for compilation checks; the Windows build remains the primary demo target.
+
+### IDE
 
 1. Open the repository in your Java IDE.
 2. Mark `PCPartPicker/src` as a source folder if needed.
 3. Add every JAR in `lib/` to the project classpath.
 4. Run `Main.java`.
 
-### Option 2: Run from the command line on Windows
-
-Compile:
-
-```powershell
-javac -cp "lib/*" -d out PCPartPicker/src/*.java
-```
-
-Run:
-
-```powershell
-java -cp "out;lib/*" Main
-```
-
 ## Demo Login
 
-- You can create a new account from the Sign Up screen
-- You can also log in with an existing user ID already stored in the demo database
-- Example user IDs listed in the current README flow: `1`, `2`, `3`
+- Create a new account from the Sign Up screen, or
+- Use an existing user ID in the bundled demo database (for example `1`, `2`, or `3`).
 
-## Notes
+## Verification
 
-- The app searches recursively for `Database for App.accdb`, so keep that file in the repository when moving the project
-- The app also searches recursively for `logo.png`, which is stored under `PCPartPicker/src/Assets/`
-- Recommendation responses are generated locally from the database contents
-- An admin dashboard exists in the codebase, but it is not part of the standard launch flow exposed to normal users
-- If JDBC or UCanAccess classes are missing at runtime, re-check that all JARs in `lib/` are on the classpath
+GitHub Actions compiles all Java source files against the bundled dependencies on every push and pull request. This catches missing classes, syntax errors and broken compile-time integrations before changes reach the demo branch.
+
+## Notes / Limitations
+
+- The app searches recursively for `Database for App.accdb`, so keep that file in the repository when moving the project.
+- The app also searches recursively for `logo.png`, stored under `PCPartPicker/src/Assets/`.
+- Assistant responses are generated locally; there is no external AI dependency in this demo.
+- An admin dashboard exists in the codebase but is not part of the standard normal-user launch flow.
+- Email verification, payment processing and real order fulfilment are outside the scope of this coursework demo.
+- If UCanAccess classes are missing at runtime, confirm that all JARs in `lib/` are on the classpath.
