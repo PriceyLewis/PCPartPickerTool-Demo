@@ -1,4 +1,4 @@
-name: Java compile check
+name: Java CI
 
 on:
   push:
@@ -10,9 +10,9 @@ permissions:
   contents: read
 
 jobs:
-  compile:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,7 +21,13 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - name: Compile source
-        run: |
-          mkdir -p build
-          javac -cp "lib/*" -d build PCPartPicker/src/*.java
+          cache: maven
+      - name: Compile and package
+        run: mvn --batch-mode --no-transfer-progress verify
+      - name: Upload runnable demo JAR
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pc-part-picker-demo
+          path: target/pc-part-picker-demo.jar
+          if-no-files-found: error
