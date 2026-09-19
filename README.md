@@ -1,59 +1,55 @@
 # PC Part Picker
 
-`PC Part Picker` is a Java Swing desktop application for browsing PC components, comparing store listings, using a local rule-based assistant, and building a basket from a bundled Microsoft Access database.
+[![Java CI](https://github.com/PriceyLewis/PCPartPickerTool-Demo/actions/workflows/compile.yml/badge.svg)](https://github.com/PriceyLewis/PCPartPickerTool-Demo/actions/workflows/compile.yml)
 
-This repository is a self-contained portfolio demo. It does **not** require a cloud AI service, external API, or hosted backend.
+A recruiter-friendly Java Swing demo for browsing PC components, comparing store inventory, building a basket and using a deterministic local recommendation assistant backed by Microsoft Access.
 
-## What This Project Demonstrates
+![PC Part Picker portfolio preview](https://priceylewis.github.io/assets/pc-part-picker.svg)
 
-- Java / object-oriented desktop development
-- Swing UI flows across multiple screens
-- JDBC-style database access through UCanAccess / Jackcess
-- Search, filtering, basket and account state
-- A deterministic local assistant for structured natural-language-style commands
-- Safer mutating actions that require user confirmation
-- Team software development and integration
+> This was originally team coursework. The repository deliberately distinguishes my contribution and does not imply sole authorship of the original team project.
 
-## Features
+## What this project demonstrates
 
-- Sign up for a demo account or log in with an existing user ID
-- Browse in-stock parts across stores
-- Filter parts by keyword, brand, and price range
-- Ask the built-in assistant to find, add, remove or clear parts
-- Add parts to a basket and view a running total
-- Leave and read store reviews
-- View recent user search history
+- Java 17 and object-oriented desktop development
+- multi-screen Swing UI flows
+- JDBC-style database access through UCanAccess
+- parameterised database mutations and search/filter flows
+- basket, account, review and search-history state
+- a deterministic natural-language-style recommendation assistant
+- explicit confirmation before mutating recommendation actions
+- Maven dependency management and automated CI
+- team integration and maintenance of an existing codebase
 
-## My Contribution
+## My contribution
 
-This began as team coursework. My main contribution included Java Swing application code, database-backed flows, and the assistant integration. The public repository is presented as a demo rather than implying that every original team feature was solely authored by me.
+My work included Java Swing application code, database-backed flows and the assistant integration. I later converted the public portfolio version away from its original cloud-AI dependency so reviewers can run the important journeys locally without API keys or paid services.
 
-## Tech Stack
+## Feature walkthrough
+
+1. Create a demo account or sign in using an existing demo user ID.
+2. Browse and filter in-stock components.
+3. Ask the local assistant for a recommendation or budget-based option.
+4. Confirm a recommendation before adding it to the basket.
+5. Review the running basket total.
+6. Leave/read store reviews and inspect recent search history.
+
+## Tech stack
 
 - Java 17+
 - Swing
 - UCanAccess / Jackcess
 - Microsoft Access (`.accdb`)
+- Maven
+- GitHub Actions
 
-## Project Layout
+## Quick start
 
-- `PCPartPicker/src/Main.java` — main application flow and screens
-- `PCPartPicker/src/DatabaseAccess.java` — database queries and updates
-- `PCPartPicker/src/PCPartAI.java` — local assistant / recommendation logic
-- `PCPartPicker/src/GUI.java` — shared Swing helpers
-- `PCPartPicker/Database for App.accdb` — bundled demo database
-- `lib/` — JDBC and Access-related dependencies required by the demo
+Requirements:
 
-## Requirements
-
-- JDK 17 or later
-- Windows is the safest target environment for the full UI/database demo because the project was developed around Microsoft Access through UCanAccess
-
-## Quick Start
+- JDK 17+
+- Maven 3.9+
 
 ### Windows
-
-From the repository root:
 
 ```powershell
 .\run-demo.bat
@@ -66,29 +62,49 @@ chmod +x run-demo.sh
 ./run-demo.sh
 ```
 
-The shell launcher is useful for compilation checks; the Windows build remains the primary demo target.
+Or:
 
-### IDE
+```bash
+mvn verify
+java -jar target/pc-part-picker-demo.jar
+```
 
-1. Open the repository in your Java IDE.
-2. Mark `PCPartPicker/src` as a source folder if needed.
-3. Add every JAR in `lib/` to the project classpath.
-4. Run `Main.java`.
+The application searches for the bundled `PCPartPicker/Database for App.accdb` and the local logo asset at runtime.
 
-## Demo Login
+## Architecture
 
-- Create a new account from the Sign Up screen, or
-- Use an existing user ID in the bundled demo database (for example `1`, `2`, or `3`).
+```text
+Swing UI
+  |
+  +--> Browse / search / basket / reviews
+  |
+  +--> Local recommendation assistant
+  |          |
+  |          +--> ranked in-stock inventory
+  |          +--> budget + preference matching
+  |
+  +--> DatabaseAccess
+              |
+              +--> UCanAccess
+                      |
+                      +--> bundled Access demo database
+```
+
+## Project layout
+
+- `PCPartPicker/src/Main.java` — main application journeys and screens
+- `PCPartPicker/src/DatabaseAccess.java` — database reads and writes
+- `PCPartPicker/src/PCPartAI.java` — deterministic assistant/recommendation logic
+- `PCPartPicker/src/GUI.java` — shared Swing helpers
+- `PCPartPicker/Database for App.accdb` — bundled demo data
+- `pom.xml` — maintained dependency and packaging configuration
+
+Dependency JARs are no longer committed to the repository; Maven resolves them during the build.
 
 ## Verification
 
-GitHub Actions compiles all Java source files against the bundled dependencies on every push and pull request. This catches missing classes, syntax errors and broken compile-time integrations before changes reach the demo branch.
+GitHub Actions runs `mvn verify` on every push and pull request and packages a runnable demo JAR on successful pushes.
 
-## Notes / Limitations
+## Scope
 
-- The app searches recursively for `Database for App.accdb`, so keep that file in the repository when moving the project.
-- The app also searches recursively for `logo.png`, stored under `PCPartPicker/src/Assets/`.
-- Assistant responses are generated locally; there is no external AI dependency in this demo.
-- An admin dashboard exists in the codebase but is not part of the standard normal-user launch flow.
-- Email verification, payment processing and real order fulfilment are outside the scope of this coursework demo.
-- If UCanAccess classes are missing at runtime, confirm that all JARs in `lib/` are on the classpath.
+This is a portfolio/coursework demo rather than an e-commerce system. It intentionally has no payment processing, order fulfilment or cloud AI dependency. The assistant ranks local demo data rather than claiming to be a generative-AI service.
