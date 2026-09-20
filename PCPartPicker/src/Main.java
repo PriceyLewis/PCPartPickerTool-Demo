@@ -552,23 +552,28 @@ public class Main {
                 sql.append(" AND Parts.Brand = ?");
                 params.add(brand);
             }
-            if (!minPrice.isEmpty()) {
-                try {
-                    sql.append(" AND Inventory.Price >= ?");
-                    params.add(Double.parseDouble(minPrice));
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Min price must be numeric.");
-                    return;
-                }
+            Double minPriceValue;
+            Double maxPriceValue;
+            try {
+                minPriceValue = parseOptionalPriceFilter(minPrice);
+                maxPriceValue = parseOptionalPriceFilter(maxPrice);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(frame, ex.getMessage());
+                return;
             }
-            if (!maxPrice.isEmpty()) {
-                try {
-                    sql.append(" AND Inventory.Price <= ?");
-                    params.add(Double.parseDouble(maxPrice));
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Max price must be numeric.");
-                    return;
-                }
+
+            if (minPriceValue != null && maxPriceValue != null && minPriceValue > maxPriceValue) {
+                JOptionPane.showMessageDialog(frame, "Min price cannot be greater than max price.");
+                return;
+            }
+
+            if (minPriceValue != null) {
+                sql.append(" AND Inventory.Price >= ?");
+                params.add(minPriceValue);
+            }
+            if (maxPriceValue != null) {
+                sql.append(" AND Inventory.Price <= ?");
+                params.add(maxPriceValue);
             }
 
             sql.append(" ORDER BY Inventory.Price ASC");
@@ -846,17 +851,43 @@ public class Main {
         JOptionPane.showMessageDialog(parent, partName + " added to basket.");
     }
 
+    static Double parseOptionalPriceFilter(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            double value = Double.parseDouble(text.trim());
+            if (!Double.isFinite(value) || value < 0) {
+                throw new NumberFormatException("Price must be finite and non-negative");
+            }
+            return value;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("Price must be a finite number zero or above.");
+        }
+    }
+
     public static double parsePriceValue(Object value) {
         if (value == null) {
             return 0;
         }
 
+        double parsed;
         if (value instanceof Number number) {
-            return number.doubleValue();
+            parsed = number.doubleValue();
+        } else {
+            String text = value.toString()
+                .replace("GBP", "")
+                .replace("£", "")
+                .replace("$", "")
+                .trim();
+            parsed = Double.parseDouble(text);
         }
 
-        String text = value.toString().replace("GBP", "").replace("$", "").trim();
-        return Double.parseDouble(text);
+        if (!Double.isFinite(parsed) || parsed < 0) {
+            throw new IllegalArgumentException("Price must be a finite number zero or above.");
+        }
+        return parsed;
     }
 
     private static double basketTotal() {
