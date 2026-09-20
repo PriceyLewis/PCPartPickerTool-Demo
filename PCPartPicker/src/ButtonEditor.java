@@ -26,6 +26,7 @@ class ButtonEditor extends DefaultCellEditor {
     private final JButton button;
     private final DefaultTableModel model;
     private JTable table;
+    private int editingRow = -1;
     private String label;
 
     public ButtonEditor(JCheckBox checkBox, DefaultTableModel model) {
@@ -38,6 +39,7 @@ class ButtonEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         this.table = table;
+        this.editingRow = row;
         this.label = value == null ? "Add to Basket" : value.toString();
         button.setText(label);
         return button;
@@ -45,8 +47,8 @@ class ButtonEditor extends DefaultCellEditor {
 
     @Override
     public Object getCellEditorValue() {
-        int row = table.getSelectedRow();
-        if (row >= 0) {
+        if (table != null && editingRow >= 0) {
+            int row = table.convertRowIndexToModel(editingRow);
             String partName = String.valueOf(model.getValueAt(row, 0));
             String storeName = String.valueOf(model.getValueAt(row, 1));
             double price = Main.parsePriceValue(model.getValueAt(row, 2));
