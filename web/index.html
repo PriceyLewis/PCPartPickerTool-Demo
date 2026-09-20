@@ -116,11 +116,16 @@
     }
 
     try {
+      const javaProperties = ["portfolio.browser=true"];
+      if (window.innerWidth <= 700) {
+        javaProperties.push("portfolio.compact=true");
+      }
+
       await cheerpjInit({
         version: 17,
         status: "splash",
         clipboardMode: "system",
-        javaProperties: ["portfolio.browser=true"],
+        javaProperties,
         natives: {
           Java_BrowserBridge_notifyReady,
         },
