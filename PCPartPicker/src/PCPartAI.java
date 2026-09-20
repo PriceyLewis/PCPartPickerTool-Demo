@@ -177,8 +177,8 @@ public class PCPartAI {
         }
     }
 
-    private double extractBudget(String prompt) {
-        Pattern pattern = Pattern.compile("(?:under|below|max|budget)\\s*(?:gbp|usd|\\$)?\\s*(\\d+(?:\\.\\d+)?)", Pattern.CASE_INSENSITIVE);
+    static double extractBudget(String prompt) {
+        Pattern pattern = Pattern.compile("(?:under|below|max|budget)\\s*(?:gbp|usd|£|\\$)?\\s*(\\d+(?:\\.\\d+)?)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(prompt);
         if (matcher.find()) {
             return Double.parseDouble(matcher.group(1));
