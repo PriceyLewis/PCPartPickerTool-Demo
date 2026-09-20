@@ -1,0 +1,133 @@
+name: Browser Demo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pc-part-picker-browser-demo
+  cancel-in-progress: true
+
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Build and test Java application
+        run: mvn --batch-mode --no-transfer-progress verify
+
+      - name: Prepare browser distribution
+        run: |
+          rm -rf dist
+          mkdir -p dist
+          cp web/index.html dist/index.html
+          cp target/pc-part-picker-demo.jar dist/pc-part-picker-demo.jar
+          touch dist/.nojekyll
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Chromium smoke-test dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Smoke test CheerpJ browser launcher
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --directory dist >/tmp/browser-demo-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+
+          for attempt in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+
+            await page.goto('http://127.0.0.1:4173/', {
+              waitUntil: 'domcontentloaded',
+              timeout: 120000,
+            });
+
+            await page.waitForFunction(
+              () => window.__pcPartDemoJavaReady || window.__pcPartDemoError,
+              null,
+              { timeout: 120000 }
+            );
+
+            const launchError = await page.evaluate(() => window.__pcPartDemoError || '');
+            if (launchError) {
+              throw new Error(launchError);
+            }
+
+            const state = await page.evaluate(() => ({
+              started: Boolean(window.__pcPartDemoLaunchStarted),
+              displayCreated: Boolean(window.__pcPartDemoDisplayCreated),
+              javaReady: Boolean(window.__pcPartDemoJavaReady),
+              stage: window.__pcPartDemoStage || '',
+              status: document.getElementById('status')?.textContent || '',
+            }));
+
+            if (!state.started || !state.displayCreated || !state.javaReady || state.stage !== 'home') {
+              throw new Error('PC Part Picker browser demo did not reach its Swing home screen: ' + JSON.stringify(state));
+            }
+
+            await page.waitForTimeout(5000);
+            await page.screenshot({ path: 'browser-demo.png', fullPage: true });
+            console.log('Browser demo smoke state:', state);
+            await browser.close();
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload browser-demo screenshot
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pc-part-picker-browser-demo
+          path: browser-demo.png
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Publish gh-pages branch
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd dist
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b gh-pages
+          git add .
+          git commit -m "Deploy browser demo from ${GITHUB_SHA}"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin gh-pages
