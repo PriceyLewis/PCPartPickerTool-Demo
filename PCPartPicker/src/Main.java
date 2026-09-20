@@ -16,6 +16,7 @@ public class Main {
     private static final String APP_TITLE = "PC Part Picker";
     private static final String BASKET_SEPARATOR = " | ";
     private static final boolean BROWSER_DEMO = Boolean.getBoolean("portfolio.browser");
+    private static final boolean COMPACT_BROWSER = BROWSER_DEMO && Boolean.getBoolean("portfolio.compact");
 
     public static void main(String[] args) {
         if (BROWSER_DEMO) {
@@ -52,7 +53,7 @@ public class Main {
     }
 
     private static void showWelcomeScreen(GUI gui, DatabaseAccess database) {
-        JFrame frame = gui.Addframe(600, 420, APP_TITLE + " - Welcome");
+        JFrame frame = gui.Addframe(browserWidth(600), 420, APP_TITLE + " - Welcome");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = gui.Addpanel(frame, new GridLayout(4, 1, 12, 12));
@@ -138,7 +139,7 @@ public class Main {
     }
 
     public static void homeScreen(GUI gui, DatabaseAccess database) {
-        JFrame frame = gui.Addframe(600, 480, APP_TITLE + " - Home");
+        JFrame frame = gui.Addframe(browserWidth(600), 480, APP_TITLE + " - Home");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = gui.Addpanel(frame, new GridLayout(4, 2, 10, 10));
@@ -167,7 +168,7 @@ public class Main {
     }
 
     public static void managePartsScreen(GUI gui, DatabaseAccess db) {
-        JFrame frame = gui.Addframe(760, 440, "Manage Parts");
+        JFrame frame = gui.Addframe(browserWidth(760), 440, "Manage Parts");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout(10, 10));
@@ -288,7 +289,7 @@ public class Main {
 
     private static ActionListener user_SignUp(GUI gui, DatabaseAccess database) {
         return e -> {
-            JFrame frame = gui.Addframe(420, 260, APP_TITLE + " - Sign Up");
+            JFrame frame = gui.Addframe(browserWidth(420), 260, APP_TITLE + " - Sign Up");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             JPanel panel = gui.Addpanel(frame, new GridLayout(4, 2, 10, 10));
@@ -333,7 +334,7 @@ public class Main {
 
     private static ActionListener user_LoginIn(GUI gui, DatabaseAccess database) {
         return e -> {
-            JFrame frame = gui.Addframe(380, 180, APP_TITLE + " - Login");
+            JFrame frame = gui.Addframe(browserWidth(380), 180, APP_TITLE + " - Login");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             JPanel panel = gui.Addpanel(frame, new GridLayout(2, 2, 10, 10));
@@ -373,7 +374,7 @@ public class Main {
     }
 
     public static void ai_GUI(GUI gui, DatabaseAccess database) {
-        JFrame frame = gui.Addframe(700, 460, APP_TITLE + " - Recommendations");
+        JFrame frame = gui.Addframe(browserWidth(700), 460, APP_TITLE + " - Recommendations");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
@@ -442,7 +443,7 @@ public class Main {
     }
 
     public static void adminScreen(GUI gui, DatabaseAccess database) {
-        JFrame frame = gui.Addframe(620, 480, "Admin Dashboard");
+        JFrame frame = gui.Addframe(browserWidth(620), 480, "Admin Dashboard");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = gui.Addpanel(frame, new GridLayout(6, 1, 10, 10));
@@ -500,7 +501,7 @@ public class Main {
     }
 
     public static void searchPartsScreen(GUI gui, DatabaseAccess db) {
-        JFrame frame = gui.Addframe(760, 480, "Search Parts");
+        JFrame frame = gui.Addframe(browserWidth(760), 480, "Search Parts");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = gui.Addpanel(frame, new BorderLayout(10, 10));
@@ -620,7 +621,7 @@ public class Main {
     }
 
     public static void viewReviewsScreen(GUI gui, DatabaseAccess db) {
-        JFrame frame = gui.Addframe(640, 420, "Store Reviews");
+        JFrame frame = gui.Addframe(browserWidth(640), 420, "Store Reviews");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = gui.Addpanel(frame, new BorderLayout(10, 10));
@@ -683,7 +684,7 @@ public class Main {
             return;
         }
 
-        JFrame frame = gui.Addframe(600, 380, "Your History");
+        JFrame frame = gui.Addframe(browserWidth(600), 380, "Your History");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         DefaultTableModel model = new DefaultTableModel(new String[]{"Searched Part", "Date", "Location"}, 0);
@@ -711,7 +712,7 @@ public class Main {
     }
 
     public static void showBasket(GUI gui, DatabaseAccess db) {
-        JFrame frame = gui.Addframe(480, 420, "Your Basket");
+        JFrame frame = gui.Addframe(browserWidth(480), 420, "Your Basket");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout(10, 10));
@@ -769,7 +770,7 @@ public class Main {
     }
 
     public static void partBrowserScreen(GUI gui, DatabaseAccess database) {
-        JFrame frame = gui.Addframe(820, 500, "Browse Parts");
+        JFrame frame = gui.Addframe(browserWidth(820), 500, "Browse Parts");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout(10, 10));
