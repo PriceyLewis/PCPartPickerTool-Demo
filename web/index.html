@@ -55,7 +55,8 @@
     @media (max-width: 760px) {
       header { align-items: flex-start; flex-direction: column; }
       .actions { justify-content: flex-start; }
-      #container { min-height: 760px; }
+      /* The home Swing window is 700x420; keep enough room without leaving a large empty band on phones. */
+      #container { min-height: 600px; }
     }
   </style>
 </head>
