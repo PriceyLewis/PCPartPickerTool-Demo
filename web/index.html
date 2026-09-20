@@ -103,11 +103,16 @@
     }
 
     async function Java_BrowserBridge_notifyReady(lib, stage) {
-      window.__pcPartDemoJavaReady = true;
-      window.__pcPartDemoStage = String(stage || "ready");
-      loading.classList.add("hidden");
-      setTimeout(() => loading.remove(), 400);
-      status.textContent = "Browser demo running";
+      const readyStage = String(stage || "ready");
+      window.__pcPartDemoStage = readyStage;
+      if (readyStage === "home") {
+        window.__pcPartDemoJavaReady = true;
+        loading.classList.add("hidden");
+        setTimeout(() => loading.remove(), 400);
+        status.textContent = "Browser demo running";
+      } else {
+        status.textContent = "Starting Java app · " + readyStage;
+      }
     }
 
     try {
