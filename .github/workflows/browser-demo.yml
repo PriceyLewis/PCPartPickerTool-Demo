@@ -118,6 +118,37 @@ jobs:
             await page.waitForTimeout(5000);
             await page.screenshot({ path: 'browser-demo.png', fullPage: true });
             console.log('Browser demo smoke state:', state);
+            await page.close();
+
+            const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            const mobileErrors = [];
+            mobile.on('pageerror', error => mobileErrors.push(error.message));
+            await mobile.goto('http://127.0.0.1:4173/', {
+              waitUntil: 'domcontentloaded',
+              timeout: 120000,
+            });
+            await mobile.waitForFunction(
+              () => window.__pcPartDemoJavaReady || window.__pcPartDemoError,
+              null,
+              { timeout: 150000 }
+            );
+            const mobileState = await mobile.evaluate(() => ({
+              error: window.__pcPartDemoError || '',
+              ready: Boolean(window.__pcPartDemoJavaReady),
+              stage: window.__pcPartDemoStage || '',
+              viewport: innerWidth,
+              documentWidth: document.documentElement.scrollWidth,
+              containerWidth: document.getElementById('container')?.getBoundingClientRect().width || 0,
+            }));
+            if (mobileState.error || !mobileState.ready || mobileState.stage !== 'home') {
+              throw new Error('PC Part Picker mobile Swing demo failed: ' + JSON.stringify(mobileState));
+            }
+            if (mobileErrors.length || mobileState.documentWidth > mobileState.viewport + 2 || mobileState.containerWidth > mobileState.viewport + 2) {
+              throw new Error('PC Part Picker mobile visual shell failed: ' + JSON.stringify({ mobileState, mobileErrors }));
+            }
+            await mobile.waitForTimeout(3500);
+            await mobile.screenshot({ path: 'browser-demo-mobile.png', fullPage: true });
+            await mobile.close();
             await browser.close();
           })().catch(error => {
             console.error(error);
@@ -130,7 +161,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: pc-part-picker-browser-demo
-          path: browser-demo.png
+          path: |
+            browser-demo.png
+            browser-demo-mobile.png
           if-no-files-found: warn
           retention-days: 7
 
