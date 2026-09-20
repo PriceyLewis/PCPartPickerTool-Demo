@@ -18,6 +18,14 @@
     <sourceDirectory>PCPartPicker/src</sourceDirectory>
     <testSourceDirectory>PCPartPicker/test</testSourceDirectory>
     <finalName>pc-part-picker-demo</finalName>
+    <resources>
+      <resource>
+        <directory>PCPartPicker/src</directory>
+        <includes>
+          <include>Assets/**</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
