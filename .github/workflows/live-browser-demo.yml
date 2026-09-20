@@ -1,0 +1,98 @@
+name: Live Browser Demo
+
+on:
+  workflow_run:
+    workflows: ["Browser Demo"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pc-part-picker-live-browser-demo
+  cancel-in-progress: true
+
+jobs:
+  live-smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Wait for public GitHub Pages deployment
+        shell: bash
+        run: |
+          for attempt in {1..36}; do
+            if curl -fsS --max-time 20 https://priceylewis.github.io/PCPartPickerTool-Demo/ | grep -q "PC Part Picker"; then
+              echo "Public browser demo is available."
+              exit 0
+            fi
+            echo "Attempt $attempt: public demo not ready yet."
+            sleep 10
+          done
+          echo "Public demo did not become available."
+          exit 1
+
+      - name: Launch public Swing demo in Chromium
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+            page.on('console', message => console.log('[browser console]', message.type(), message.text()));
+            page.on('pageerror', error => console.error('[browser pageerror]', error));
+
+            await page.goto('https://priceylewis.github.io/PCPartPickerTool-Demo/', {
+              waitUntil: 'domcontentloaded',
+              timeout: 120000,
+            });
+
+            await page.waitForFunction(
+              () => window.__pcPartDemoJavaReady || window.__pcPartDemoError,
+              null,
+              { timeout: 180000 }
+            );
+
+            const state = await page.evaluate(() => ({
+              javaReady: Boolean(window.__pcPartDemoJavaReady),
+              stage: window.__pcPartDemoStage || '',
+              error: window.__pcPartDemoError || '',
+              displayPresent: Boolean(document.getElementById('cheerpj-display')),
+              status: document.getElementById('status')?.textContent || '',
+            }));
+
+            if (state.error || !state.javaReady || state.stage !== 'home' || !state.displayPresent) {
+              throw new Error('Public PC Part Picker demo failed: ' + JSON.stringify(state));
+            }
+
+            await page.waitForTimeout(3000);
+            await page.screenshot({ path: 'live-browser-demo.png', fullPage: true });
+            console.log('Public browser demo state:', state);
+            await browser.close();
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload live screenshot
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pc-part-picker-live-browser-demo
+          path: live-browser-demo.png
+          if-no-files-found: warn
+          retention-days: 7
