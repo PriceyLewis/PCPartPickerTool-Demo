@@ -154,7 +154,7 @@ final class BrowserDemoData {
                 return rowSet(
                     new String[]{"TotalUsers"},
                     new int[]{Types.INTEGER},
-                    List.of(new Object[]{USERS.size()})
+                    List.<Object[]>of(new Object[]{USERS.size()})
                 );
             }
             return rowSet(
@@ -178,7 +178,7 @@ final class BrowserDemoData {
                 return rowSet(
                     new String[]{"SearchedPart", "SearchCount"},
                     new int[]{Types.VARCHAR, Types.INTEGER},
-                    List.of(new Object[]{top.getKey(), top.getValue()})
+                    List.<Object[]>of(new Object[]{top.getKey(), top.getValue()})
                 );
             }
 
@@ -217,7 +217,7 @@ final class BrowserDemoData {
             return rowSet(
                 new String[]{"LowStockCount"},
                 new int[]{Types.INTEGER},
-                List.of(new Object[]{(int) count})
+                List.<Object[]>of(new Object[]{(int) count})
             );
         }
 
