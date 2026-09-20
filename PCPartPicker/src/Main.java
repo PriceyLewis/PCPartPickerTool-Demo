@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -14,13 +15,19 @@ public class Main {
     public static final DefaultListModel<String> basketModel = new DefaultListModel<>();
     private static final String APP_TITLE = "PC Part Picker";
     private static final String BASKET_SEPARATOR = " | ";
+    private static final boolean BROWSER_DEMO = Boolean.getBoolean("portfolio.browser");
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             configureLookAndFeel();
             GUI gui = new GUI();
             DatabaseAccess database = new DatabaseAccess();
-            showWelcomeScreen(gui, database);
+            if (BROWSER_DEMO) {
+                user_details = DatabaseAccess.browserDemoUser();
+                homeScreen(gui, database);
+            } else {
+                showWelcomeScreen(gui, database);
+            }
         });
     }
 
@@ -65,6 +72,11 @@ public class Main {
     }
 
     private static ImageIcon loadLogoIcon() {
+        URL resource = Main.class.getResource("/Assets/logo.png");
+        if (resource != null) {
+            return new ImageIcon(resource);
+        }
+
         File logo = findFile(new File(System.getProperty("user.dir")), "logo.png");
         return logo != null ? new ImageIcon(logo.getAbsolutePath()) : null;
     }
@@ -144,6 +156,9 @@ public class Main {
         exitButton.addActionListener(e -> gui.Close(frame));
 
         frame.setVisible(true);
+        if (BROWSER_DEMO) {
+            BrowserBridge.signalReady("home");
+        }
     }
 
     public static void managePartsScreen(GUI gui, DatabaseAccess db) {
