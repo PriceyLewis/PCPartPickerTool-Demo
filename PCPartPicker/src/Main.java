@@ -18,11 +18,16 @@ public class Main {
     private static final boolean BROWSER_DEMO = Boolean.getBoolean("portfolio.browser");
 
     public static void main(String[] args) {
+        if (BROWSER_DEMO) {
+            BrowserBridge.signalReady("main-start");
+        }
+
         SwingUtilities.invokeLater(() -> {
             configureLookAndFeel();
             GUI gui = new GUI();
             DatabaseAccess database = new DatabaseAccess();
             if (BROWSER_DEMO) {
+                BrowserBridge.signalReady("database-ready");
                 user_details = DatabaseAccess.browserDemoUser();
                 homeScreen(gui, database);
             } else {
