@@ -69,17 +69,33 @@ jobs:
           (async () => {
             const browser = await chromium.launch();
             const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+            page.on('console', message => console.log('[browser console]', message.type(), message.text()));
+            page.on('pageerror', error => console.error('[browser pageerror]', error));
 
             await page.goto('http://127.0.0.1:4173/', {
               waitUntil: 'domcontentloaded',
               timeout: 120000,
             });
 
-            await page.waitForFunction(
-              () => window.__pcPartDemoJavaReady || window.__pcPartDemoError,
-              null,
-              { timeout: 120000 }
-            );
+            try {
+              await page.waitForFunction(
+                () => window.__pcPartDemoJavaReady || window.__pcPartDemoError,
+                null,
+                { timeout: 120000 }
+              );
+            } catch (waitError) {
+              const diagnosticState = await page.evaluate(() => ({
+                runtimeReady: Boolean(window.__pcPartDemoRuntimeReady),
+                displayCreated: Boolean(window.__pcPartDemoDisplayCreated),
+                runJarCalled: Boolean(window.__pcPartDemoRunJarCalled),
+                javaReady: Boolean(window.__pcPartDemoJavaReady),
+                stage: window.__pcPartDemoStage || '',
+                launchError: window.__pcPartDemoError || '',
+                status: document.getElementById('status')?.textContent || '',
+                errorText: document.getElementById('error')?.textContent || '',
+              }));
+              throw new Error('Timed out waiting for Swing readiness: ' + JSON.stringify(diagnosticState), { cause: waitError });
+            }
 
             const launchError = await page.evaluate(() => window.__pcPartDemoError || '');
             if (launchError) {
