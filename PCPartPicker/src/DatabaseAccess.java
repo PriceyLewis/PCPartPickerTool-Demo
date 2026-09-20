@@ -13,9 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DatabaseAccess {
+    private static final boolean BROWSER_DEMO = Boolean.getBoolean("portfolio.browser");
+    private static final String BROWSER_URL = "browser-demo://memory";
     private final String url;
 
     public DatabaseAccess() {
+        if (BROWSER_DEMO) {
+            this.url = BROWSER_URL;
+            return;
+        }
+
         File dbFile = findDatabaseFile("Database for App.accdb");
         if (!dbFile.exists()) {
             throw new IllegalStateException("Database file not found: " + dbFile.getAbsolutePath());
@@ -58,6 +65,10 @@ public class DatabaseAccess {
     }
 
     public CachedRowSet executeQuery(String sql, Object... parameters) {
+        if (isBrowserUrl(url)) {
+            return BrowserDemoData.query(sql, parameters);
+        }
+
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement stmt = prepareStatement(conn, sql, parameters);
              ResultSet rs = stmt.executeQuery()) {
@@ -70,6 +81,10 @@ public class DatabaseAccess {
     }
 
     public int executeUpdate(String sql, Object... parameters) {
+        if (isBrowserUrl(url)) {
+            return BrowserDemoData.update(sql, parameters);
+        }
+
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement stmt = prepareStatement(conn, sql, parameters)) {
             return stmt.executeUpdate();
@@ -87,6 +102,27 @@ public class DatabaseAccess {
     }
 
     public static String retrieve_Recomendations_Reviews(String sql, String url) {
+        if (isBrowserUrl(url)) {
+            StringBuilder browserResult = new StringBuilder();
+            try {
+                ResultSet rs = BrowserDemoData.query(sql);
+                int columnCount = rs.getMetaData().getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    browserResult.append(rs.getMetaData().getColumnName(i)).append('\t');
+                }
+                browserResult.append('\n');
+                while (rs.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        browserResult.append(rs.getString(i)).append('\t');
+                    }
+                    browserResult.append('\n');
+                }
+                return browserResult.toString();
+            } catch (SQLException e) {
+                throw new RuntimeException("Could not retrieve browser demo data.", e);
+            }
+        }
+
         StringBuilder result = new StringBuilder();
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
@@ -111,6 +147,10 @@ public class DatabaseAccess {
     }
 
     public static Map<String, Object> add_User(String username, String preferences, String location, String url) {
+        if (isBrowserUrl(url)) {
+            return BrowserDemoData.addUser(username, preferences, location);
+        }
+
         String sql = "INSERT INTO Users (Username, Location, Preferences) VALUES (?, ?, ?)";
         Map<String, Object> userDetails = new HashMap<>();
 
@@ -137,6 +177,10 @@ public class DatabaseAccess {
     }
 
     public static Map<String, Object> retrieve_User(String userId, String url) {
+        if (isBrowserUrl(url)) {
+            return BrowserDemoData.retrieveUser(userId);
+        }
+
         String sql = "SELECT UserID, Username, Location, Preferences FROM Users WHERE UserID = ?";
 
         try (Connection conn = DriverManager.getConnection(url);
@@ -161,6 +205,11 @@ public class DatabaseAccess {
     }
 
     public void add_Log(String pcPart, Map<String, Object> userDetails, String ignoredUrl) {
+        if (isBrowserUrl(url)) {
+            BrowserDemoData.addSearchLog(pcPart, userDetails);
+            return;
+        }
+
         String sql = "INSERT INTO UserSearches (UserID, SearchedPart, SearchDate, UserLocation) VALUES (?, ?, ?, ?)";
         executeUpdate(
             sql,
@@ -172,6 +221,10 @@ public class DatabaseAccess {
     }
 
     public String retrieve_StoreID(String storeName) {
+        if (isBrowserUrl(url)) {
+            return BrowserDemoData.storeIdFor(storeName);
+        }
+
         CachedRowSet rs = executeQuery("SELECT TOP 1 StoreID FROM Stores WHERE StoreName = ? OR StoreName LIKE ?", storeName, "%" + storeName + "%");
         try {
             if (rs.next()) {
@@ -184,6 +237,11 @@ public class DatabaseAccess {
     }
 
     public void insert_Review(String storeId, String userID, String review, int rating) {
+        if (isBrowserUrl(url)) {
+            BrowserDemoData.addReview(storeId, userID, review, rating);
+            return;
+        }
+
         executeUpdate(
             "INSERT INTO StoreReviews (StoreID, UserID, [Rating(1-5)], Comment, ReviewDate) VALUES (?, ?, ?, ?, ?)",
             storeId,
@@ -194,7 +252,20 @@ public class DatabaseAccess {
         );
     }
 
+    private static boolean isBrowserUrl(String candidate) {
+        return candidate != null && candidate.startsWith("browser-demo:");
+    }
+
+    public static Map<String, Object> browserDemoUser() {
+        return BrowserDemoData.demoUser();
+    }
+
     public static void update_Stock(String partName, String url, String storeID) {
+        if (isBrowserUrl(url)) {
+            BrowserDemoData.decrementStock(partName, storeID);
+            return;
+        }
+
         String selectSql = "SELECT TOP 1 PartID FROM Parts WHERE PartName = ?";
         String updateSql = "UPDATE Inventory SET StockLevel = StockLevel - 1, LastUpdated = ? " +
             "WHERE PartID = ? AND StoreID = ? AND StockLevel > 0";
