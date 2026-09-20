@@ -5,7 +5,7 @@
 
 ## Portfolio release status
 
-**v1.0.0 Portfolio Release · Verified 20 September 2026**
+**v1.2.0 Portfolio Release · UI and journey audit completed 20 September 2026**
 
 This is the recruiter-facing release of the project. Automated tests and the public demo journey have been re-verified before publication.
 
@@ -30,6 +30,8 @@ A recruiter-friendly Java Swing demo for browsing PC components, comparing store
 - explicit confirmation before mutating recommendation actions
 - Maven dependency management and automated CI
 - team integration and maintenance of an existing codebase
+- a cohesive dark visual system with reusable Swing components and clearer dashboard hierarchy
+- automated end-to-end data-journey coverage for accounts, inventory, history, reviews and recommendations
 
 ## My contribution
 
@@ -124,7 +126,7 @@ Dependency JARs are no longer committed to the repository; Maven resolves them d
 
 ## Verification
 
-GitHub Actions runs `mvn verify` on every push and pull request and packages a runnable demo JAR on successful pushes. A separate browser workflow launches the packaged application in Chromium through CheerpJ, waits for the Swing home-screen readiness signal and publishes the verified build to GitHub Pages.
+GitHub Actions runs `mvn verify` on every push and pull request and packages a runnable demo JAR on successful pushes. The tests cover validation plus the connected account, inventory search, history, review, admin and recommendation journeys. A separate browser workflow launches the packaged application in Chromium through CheerpJ, waits for the Swing dashboard readiness signal, checks desktop and mobile shells, and publishes the verified build to GitHub Pages.
 
 ## Scope
 
