@@ -16,6 +16,7 @@
 
   <build>
     <sourceDirectory>PCPartPicker/src</sourceDirectory>
+    <testSourceDirectory>PCPartPicker/test</testSourceDirectory>
     <finalName>pc-part-picker-demo</finalName>
     <plugins>
       <plugin>
@@ -47,6 +48,12 @@
   </build>
 
   <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.13.4</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>io.github.spannm</groupId>
       <artifactId>ucanaccess</artifactId>
