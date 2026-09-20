@@ -36,7 +36,8 @@ jobs:
           rm -rf dist
           mkdir -p dist
           cp web/index.html dist/index.html
-          cp target/pc-part-picker-demo.jar dist/pc-part-picker-demo.jar
+          test -f target/original-pc-part-picker-demo.jar
+          cp target/original-pc-part-picker-demo.jar dist/pc-part-picker-demo.jar
           touch dist/.nojekyll
 
       - name: Set up Node
