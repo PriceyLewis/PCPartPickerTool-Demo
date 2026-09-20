@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUI {
-    private final Font defaultFont = new Font("Segoe UI", Font.PLAIN, 14);
+    private final Font defaultFont = AppTheme.BODY;
 
     // Formats frames for a consistent, non-flickery setup.
     public JFrame Addframe(int width, int height, String title) {
@@ -11,12 +11,14 @@ public class GUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setMinimumSize(new Dimension(width, height));
         frame.setLocationRelativeTo(null);
+        frame.getContentPane().setBackground(AppTheme.BACKGROUND);
         return frame;
     }
 
     public JPanel Addpanel(JFrame frame, LayoutManager layout) {
         JPanel panel = new JPanel(layout);
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setBorder(AppTheme.padding(20, 20, 20, 20));
+        panel.setBackground(AppTheme.BACKGROUND);
         frame.add(panel);
         frame.revalidate();
         frame.repaint();
@@ -25,7 +27,8 @@ public class GUI {
 
     public JPanel Addpanel(JFrame frame) {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setBorder(AppTheme.padding(20, 20, 20, 20));
+        panel.setBackground(AppTheme.BACKGROUND);
         frame.add(panel);
         frame.revalidate();
         frame.repaint();
@@ -40,8 +43,7 @@ public class GUI {
     }
 
     public JButton Addbutton(String text, JPanel panel) {
-        JButton button = new JButton(text);
-        button.setFont(defaultFont);
+        JButton button = AppTheme.button(text, false);
         panel.add(button);
         return button;
     }
