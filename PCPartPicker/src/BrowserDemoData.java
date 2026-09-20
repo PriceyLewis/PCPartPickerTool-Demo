@@ -149,7 +149,8 @@ final class BrowserDemoData {
             );
         }
 
-        if (normalized.contains("from users")) {
+        // Match the Users table as a complete identifier; "UserSearches" also starts with "Users".
+        if (normalized.matches(".*\\bfrom users\\b.*")) {
             if (normalized.contains("count(*)")) {
                 return rowSet(
                     new String[]{"TotalUsers"},
