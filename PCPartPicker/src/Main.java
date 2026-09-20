@@ -43,17 +43,11 @@ public class Main {
 
     private static void configureLookAndFeel() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            Font font = new Font("Segoe UI", Font.PLAIN, 14);
-            UIManager.put("Button.font", font);
-            UIManager.put("Label.font", font);
-            UIManager.put("TextField.font", font);
-            UIManager.put("TextArea.font", font);
-            UIManager.put("ComboBox.font", font);
-            UIManager.put("Table.font", font);
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             System.out.println("Default look and feel applied.");
         }
+        AppTheme.install();
     }
 
     private static void showWelcomeScreen(GUI gui, DatabaseAccess database) {
@@ -131,6 +125,7 @@ public class Main {
             }
 
             JTable table = new JTable(model);
+            AppTheme.styleTable(table);
             JFrame frame = new JFrame(title);
             frame.setSize(700, 420);
             frame.setLocationRelativeTo(null);
@@ -143,18 +138,41 @@ public class Main {
     }
 
     public static void homeScreen(GUI gui, DatabaseAccess database) {
-        JFrame frame = gui.Addframe(browserWidth(600), 480, APP_TITLE + " - Home");
+        JFrame frame = gui.Addframe(browserWidth(760), 560, APP_TITLE + " - Dashboard");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel panel = gui.Addpanel(frame, new GridLayout(COMPACT_BROWSER ? 8 : 4, COMPACT_BROWSER ? 1 : 2, 10, 10));
-        JButton browseParts = gui.Addbutton("Browse Parts", panel);
-        JButton searchButton = gui.Addbutton("Search Parts", panel);
-        JButton recommendationsButton = gui.Addbutton("Recommendations", panel);
-        JButton basketButton = gui.Addbutton("View Basket", panel);
-        JButton reviewButton = gui.Addbutton("Leave Review", panel);
-        JButton viewReviewsButton = gui.Addbutton("View Reviews", panel);
-        JButton historyButton = gui.Addbutton("View History", panel);
-        JButton exitButton = gui.Addbutton("Close", panel);
+        JPanel page = gui.Addpanel(frame, new BorderLayout(0, 20));
+        String userName = user_details == null ? "Builder" : String.valueOf(user_details.getOrDefault("Username", "Builder"));
+        page.add(AppTheme.pageHeader(
+            "PC PART PICKER",
+            "Welcome back, " + userName,
+            "Compare demo inventory, build a basket and get a tailored recommendation."
+        ), BorderLayout.NORTH);
+
+        JPanel actions = new JPanel(new GridLayout(COMPACT_BROWSER ? 8 : 4, COMPACT_BROWSER ? 1 : 2, 12, 12));
+        actions.setOpaque(false);
+        JButton browseParts = dashboardButton("Browse inventory", "Compare available parts across stores");
+        JButton searchButton = dashboardButton("Advanced search", "Filter by keyword, brand and budget");
+        JButton recommendationsButton = dashboardButton("Smart recommendations", "Ask the local assistant for a match");
+        JButton basketButton = dashboardButton("Basket · " + basketModel.size() + " item(s)", "Review selections and order summary");
+        JButton reviewButton = dashboardButton("Leave a store review", "Share a rating with other builders");
+        JButton viewReviewsButton = dashboardButton("Read store reviews", "Compare recent customer feedback");
+        JButton historyButton = dashboardButton("Search history", "Revisit your recent component searches");
+        JButton exitButton = dashboardButton("Close application", "Return to your desktop or browser");
+        actions.add(browseParts);
+        actions.add(searchButton);
+        actions.add(recommendationsButton);
+        actions.add(basketButton);
+        actions.add(reviewButton);
+        actions.add(viewReviewsButton);
+        actions.add(historyButton);
+        actions.add(exitButton);
+        page.add(actions, BorderLayout.CENTER);
+
+        JLabel status = new JLabel("●  Demo inventory connected   ·   Local recommendation engine ready");
+        status.setFont(AppTheme.SUBTITLE);
+        status.setForeground(AppTheme.SUCCESS);
+        page.add(status, BorderLayout.SOUTH);
 
         browseParts.addActionListener(e -> partBrowserScreen(gui, database));
         searchButton.addActionListener(e -> searchPartsScreen(gui, database));
@@ -171,6 +189,14 @@ public class Main {
         }
     }
 
+    private static JButton dashboardButton(String title, String description) {
+        JButton button = AppTheme.button("<html><div style='text-align:left'><b>" + title +
+            "</b><br><span style='font-size:10px;color:#cbd5e1'>" + description + "</span></div></html>", false);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setVerticalAlignment(SwingConstants.CENTER);
+        return button;
+    }
+
     public static void managePartsScreen(GUI gui, DatabaseAccess db) {
         JFrame frame = gui.Addframe(browserWidth(760), 440, "Manage Parts");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -179,6 +205,7 @@ public class Main {
         String[] columns = {"PartID", "PartName", "Brand"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
+        AppTheme.styleTable(table);
 
         Runnable reloadTable = () -> {
             model.setRowCount(0);
@@ -527,6 +554,7 @@ public class Main {
         String[] columns = {"Part Name", "Store", "Price", "Brand"};
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         JTable resultTable = new JTable(tableModel);
+        AppTheme.styleTable(resultTable);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton searchButton = new JButton("Search");
@@ -693,6 +721,7 @@ public class Main {
 
         DefaultTableModel model = new DefaultTableModel(new String[]{"Searched Part", "Date", "Location"}, 0);
         JTable table = new JTable(model);
+        AppTheme.styleTable(table);
 
         try {
             ResultSet rs = db.executeQuery(
@@ -726,7 +755,7 @@ public class Main {
         JLabel totalLabel = new JLabel("", SwingConstants.CENTER);
         JButton removeButton = new JButton("Remove Selected");
         JButton clearButton = new JButton("Clear Basket");
-        JButton checkoutButton = new JButton("Checkout");
+        JButton checkoutButton = new JButton("Create Order Summary");
 
         Runnable updateTotal = () -> totalLabel.setText(String.format(Locale.UK, "Total: GBP %.2f", basketTotal()));
 
@@ -760,7 +789,7 @@ public class Main {
             }
             receipt.append("\n").append(totalLabel.getText());
             receipt.append("\nDate: ").append(java.time.LocalDate.now());
-            JOptionPane.showMessageDialog(frame, receipt.toString(), "Order Summary", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, receipt.toString(), "Demo Order Summary", JOptionPane.INFORMATION_MESSAGE);
             basketModel.clear();
             updateTotal.run();
         });
@@ -789,7 +818,7 @@ public class Main {
         };
 
         JTable table = new JTable(model);
-        table.setRowHeight(28);
+        AppTheme.styleTable(table);
         table.getColumn("Action").setCellRenderer(new ButtonRenderer());
         table.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox(), model));
 
@@ -907,6 +936,6 @@ public class Main {
     }
 
     private static String starString(int rating) {
-        return "*".repeat(Math.max(0, rating));
+        return "★".repeat(Math.max(0, rating)) + "☆".repeat(Math.max(0, 5 - rating));
     }
 }
