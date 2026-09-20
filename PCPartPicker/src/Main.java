@@ -37,6 +37,10 @@ public class Main {
         });
     }
 
+    private static int browserWidth(int desktopWidth) {
+        return COMPACT_BROWSER ? Math.min(360, desktopWidth) : desktopWidth;
+    }
+
     private static void configureLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -142,7 +146,7 @@ public class Main {
         JFrame frame = gui.Addframe(browserWidth(600), 480, APP_TITLE + " - Home");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel panel = gui.Addpanel(frame, new GridLayout(4, 2, 10, 10));
+        JPanel panel = gui.Addpanel(frame, new GridLayout(COMPACT_BROWSER ? 8 : 4, COMPACT_BROWSER ? 1 : 2, 10, 10));
         JButton browseParts = gui.Addbutton("Browse Parts", panel);
         JButton searchButton = gui.Addbutton("Search Parts", panel);
         JButton recommendationsButton = gui.Addbutton("Recommendations", panel);
