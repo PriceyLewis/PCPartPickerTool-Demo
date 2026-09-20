@@ -2,11 +2,13 @@
 
 [![Java CI](https://github.com/PriceyLewis/PCPartPickerTool-Demo/actions/workflows/compile.yml/badge.svg)](https://github.com/PriceyLewis/PCPartPickerTool-Demo/actions/workflows/compile.yml)
 
+[Launch the browser demo](https://priceylewis.github.io/PCPartPickerTool-Demo/) · [View the recruiter case study](https://priceylewis.github.io/projects/pc-part-picker.html)
+
 A recruiter-friendly Java Swing demo for browsing PC components, comparing store inventory, building a basket and using a deterministic local recommendation assistant backed by Microsoft Access.
 
 ![PC Part Picker portfolio preview](https://priceylewis.github.io/assets/pc-part-picker.svg)
 
-> This was originally team coursework. The repository deliberately distinguishes my contribution and does not imply sole authorship of the original team project.
+> This was originally team coursework. The repository deliberately distinguishes my contribution and does not imply sole authorship of the original team project. Recruiters can run the Java Swing portfolio build directly in the browser with no Java or Access setup.
 
 ## What this project demonstrates
 
@@ -23,6 +25,16 @@ A recruiter-friendly Java Swing demo for browsing PC components, comparing store
 ## My contribution
 
 My work included Java Swing application code, database-backed flows and the assistant integration. I later converted the public portfolio version away from its original cloud-AI dependency so reviewers can run the important journeys locally without API keys or paid services.
+
+## One-click browser demo
+
+The browser build runs the Java Swing application through CheerpJ and uses a disposable in-memory data adapter instead of requiring Microsoft Access inside the browser sandbox.
+
+- [Launch browser demo](https://priceylewis.github.io/PCPartPickerTool-Demo/)
+- No Java installation, API key or database setup is required.
+- Browser mode opens directly with a demo user and seeded parts, stores, inventory, reviews and search history.
+- Browsing, filters, recommendations, basket interactions, reviews and history remain interactive.
+- The normal desktop build still uses the bundled Microsoft Access database through UCanAccess.
 
 ## Feature walkthrough
 
@@ -103,7 +115,7 @@ Dependency JARs are no longer committed to the repository; Maven resolves them d
 
 ## Verification
 
-GitHub Actions runs `mvn verify` on every push and pull request and packages a runnable demo JAR on successful pushes.
+GitHub Actions runs `mvn verify` on every push and pull request and packages a runnable demo JAR on successful pushes. A separate browser workflow launches the packaged application in Chromium through CheerpJ, waits for the Swing home-screen readiness signal and publishes the verified build to GitHub Pages.
 
 ## Scope
 
