@@ -96,7 +96,7 @@ public class PCPartAI {
     private AssistantReply buildPartReply(String prompt, Map<String, Object> userDetails) {
         try {
             CachedRowSet parts = database.executeQuery(
-                "SELECT TOP 30 Parts.PartName, Parts.Brand, Stores.StoreName, Inventory.Price, Inventory.StockLevel " +
+                "SELECT Parts.PartName, Parts.Brand, Stores.StoreName, Inventory.Price, Inventory.StockLevel " +
                     "FROM (Parts INNER JOIN Inventory ON Parts.PartID = Inventory.PartID) " +
                     "INNER JOIN Stores ON Inventory.StoreID = Stores.StoreID " +
                     "WHERE Inventory.StockLevel > 0 ORDER BY Inventory.Price ASC"
@@ -106,6 +106,7 @@ public class PCPartAI {
             double maxBudget = extractBudget(prompt);
             String normalizedPrompt = prompt.toLowerCase(Locale.UK);
             String normalizedPreference = preferenceText.toLowerCase(Locale.UK);
+            String requestedCategory = requestedCategory(normalizedPrompt);
             List<ScoredPart> candidates = new ArrayList<>();
 
             while (parts.next()) {
@@ -116,6 +117,11 @@ public class PCPartAI {
                 String searchable = (partName + " " + brand).toLowerCase(Locale.UK);
 
                 if (maxBudget > 0 && price > maxBudget) {
+                    continue;
+                }
+
+                if (requestedCategory != null && DemoCatalogue.ENTRIES.stream().noneMatch(
+                    entry -> entry.name().equals(partName) && entry.category().equals(requestedCategory))) {
                     continue;
                 }
 
@@ -175,6 +181,21 @@ public class PCPartAI {
         } catch (SQLException e) {
             throw new RuntimeException("Could not build part recommendation.", e);
         }
+    }
+
+    private static String requestedCategory(String prompt) {
+        String[][] categories = {
+            {"GPU", "gpu", "graphics card"}, {"CPU", "cpu", "processor"},
+            {"Motherboard", "motherboard"}, {"RAM", "ram", "memory"},
+            {"Storage", "ssd", "hdd", "storage"}, {"Case", "case"},
+            {"PSU", "psu", "power supply"}, {"Cooling", "cooler", "cooling"}
+        };
+        for (String[] category : categories) {
+            for (int i = 1; i < category.length; i++) {
+                if (Pattern.compile("\\b" + Pattern.quote(category[i]) + "\\b").matcher(prompt).find()) return category[0];
+            }
+        }
+        return null;
     }
 
     static double extractBudget(String prompt) {

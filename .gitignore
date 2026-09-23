@@ -13,3 +13,6 @@ out/
 # Local OS/editor noise
 .DS_Store
 .vscode/
+
+# Maven build products
+target/

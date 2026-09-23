@@ -348,27 +348,17 @@ final class BrowserDemoData {
         SEARCH_LOGS.clear();
         USERS.clear();
 
-        addPart("Ryzen 7 7800X3D", "AMD");
-        addPart("Core i7-14700K", "Intel");
-        addPart("GeForce RTX 4070 Super", "NVIDIA");
-        addPart("Radeon RX 7800 XT", "AMD");
-        addPart("Vengeance 32GB DDR5", "Corsair");
-        addPart("MAG B650 Tomahawk WiFi", "MSI");
-        addPart("TUF Gaming B650-PLUS", "ASUS");
-
-        STORES.add(new Store(1, "Scan Computers"));
-        STORES.add(new Store(2, "Overclockers UK"));
-        STORES.add(new Store(3, "CCL Computers"));
-
-        addInventory(1, 1, 329.99, 7);
-        addInventory(1, 2, 334.99, 3);
-        addInventory(2, 1, 349.99, 5);
-        addInventory(3, 1, 579.99, 8);
-        addInventory(3, 2, 569.99, 4);
-        addInventory(4, 3, 449.99, 6);
-        addInventory(5, 1, 109.99, 12);
-        addInventory(6, 2, 179.99, 2);
-        addInventory(7, 3, 169.99, 9);
+        nextPartId = 1;
+        for (int store = 0; store < DemoCatalogue.STORES.length; store++) {
+            STORES.add(new Store(store + 1, DemoCatalogue.STORES[store]));
+        }
+        for (int part = 0; part < DemoCatalogue.ENTRIES.size(); part++) {
+            DemoCatalogue.Entry entry = DemoCatalogue.ENTRIES.get(part);
+            addPart(entry.name(), entry.brand());
+            for (int store = 0; store < DemoCatalogue.STORES.length; store++) {
+                addInventory(part + 1, store + 1, DemoCatalogue.price(entry, store), DemoCatalogue.stock(part, store));
+            }
+        }
 
         Map<String, Object> demo = new HashMap<>();
         demo.put("UserID", 1);
@@ -378,9 +368,9 @@ final class BrowserDemoData {
         USERS.put(1, demo);
         nextUserId = 2;
 
-        REVIEWS.add(new Review(1, 1, 5, "Fast dispatch and clear stock information.", LocalDate.now().minusDays(4)));
-        REVIEWS.add(new Review(2, 1, 4, "Good enthusiast range and helpful product pages.", LocalDate.now().minusDays(8)));
-        REVIEWS.add(new Review(3, 1, 4, "Straightforward ordering experience in the demo data.", LocalDate.now().minusDays(13)));
+        REVIEWS.add(new Review(1, 1, 5, "[Fictional demo review] Fast dispatch and clear stock information.", LocalDate.now().minusDays(4)));
+        REVIEWS.add(new Review(2, 1, 4, "[Fictional demo review] Good enthusiast range and helpful product pages.", LocalDate.now().minusDays(8)));
+        REVIEWS.add(new Review(3, 1, 4, "[Fictional demo review] Straightforward ordering experience in the demo data.", LocalDate.now().minusDays(13)));
 
         SEARCH_LOGS.add(new SearchLog(1, "GeForce RTX 4070 Super", LocalDate.now().minusDays(1), "Manchester"));
         SEARCH_LOGS.add(new SearchLog(1, "Ryzen 7 7800X3D", LocalDate.now().minusDays(2), "Manchester"));

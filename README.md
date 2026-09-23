@@ -47,6 +47,14 @@ The browser build runs the Java Swing application through CheerpJ and uses a dis
 - Browsing, filters, recommendations, basket interactions, reviews and history remain interactive.
 - The normal desktop build still uses the bundled Microsoft Access database through UCanAccess.
 
+## Expanded demonstration data
+
+Both versions share **130 components across eight categories**, with fictional prices and stock at three stores. The browser starts with 390 listings; Access also retains 17 coursework listings at other stores. Brand filters load from the data, and recommendations consider the full catalogue and recognise component categories.
+
+[Catalogue coverage, three example baskets, edge cases and maintenance](docs/DEMO_CATALOGUE.md)
+
+Seeded reviews are labelled fictional. This project does not validate hardware compatibility or provide live prices.
+
 ## Feature walkthrough
 
 1. Create a demo account or sign in using an existing demo user ID.

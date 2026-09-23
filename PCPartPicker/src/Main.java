@@ -18,6 +18,22 @@ public class Main {
     private static final boolean BROWSER_DEMO = Boolean.getBoolean("portfolio.browser");
     private static final boolean COMPACT_BROWSER = BROWSER_DEMO && Boolean.getBoolean("portfolio.compact");
 
+    private static String[] catalogueBrands(String allLabel) {
+        java.util.TreeSet<String> brands = new java.util.TreeSet<>();
+        try (var rows = new DatabaseAccess().executeQuery("SELECT PartID, PartName, Brand FROM Parts ORDER BY PartName")) {
+            while (rows.next()) {
+                String brand = rows.getString("Brand");
+                if (brand != null && !brand.isBlank()) brands.add(brand);
+            }
+        } catch (java.sql.SQLException ex) {
+            throw new IllegalStateException("Could not load catalogue brands", ex);
+        }
+        java.util.List<String> values = new java.util.ArrayList<>();
+        values.add(allLabel);
+        values.addAll(brands);
+        return values.toArray(new String[0]);
+    }
+
     public static void main(String[] args) {
         if (BROWSER_DEMO) {
             BrowserBridge.signalReady("main-start");
@@ -146,7 +162,7 @@ public class Main {
         page.add(AppTheme.pageHeader(
             "PC PART PICKER",
             "Welcome back, " + userName,
-            "Compare demo inventory, build a basket and get a tailored recommendation."
+            "Sample prices and stock only. Browse 130 components and build a demo basket."
         ), BorderLayout.NORTH);
 
         JPanel actions = new JPanel(new GridLayout(COMPACT_BROWSER ? 8 : 4, COMPACT_BROWSER ? 1 : 2, 12, 12));
@@ -540,7 +556,7 @@ public class Main {
         JTextField searchField = new JTextField(18);
         JTextField minPriceField = new JTextField(6);
         JTextField maxPriceField = new JTextField(6);
-        JComboBox<String> brandFilter = new JComboBox<>(new String[]{"All", "Intel", "AMD", "NVIDIA", "Corsair", "MSI", "ASUS"});
+        JComboBox<String> brandFilter = new JComboBox<>(catalogueBrands("All"));
 
         filters.add(new JLabel("Keyword"));
         filters.add(searchField);
@@ -822,7 +838,7 @@ public class Main {
         table.getColumn("Action").setCellRenderer(new ButtonRenderer());
         table.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox(), model));
 
-        JComboBox<String> brandFilter = new JComboBox<>(new String[]{"All Brands", "Intel", "AMD", "NVIDIA", "Corsair", "MSI", "ASUS"});
+        JComboBox<String> brandFilter = new JComboBox<>(catalogueBrands("All Brands"));
         JComboBox<String> sortFilter = new JComboBox<>(new String[]{"Default", "Price Low to High", "Price High to Low"});
         JPanel filters = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filters.add(new JLabel("Brand"));

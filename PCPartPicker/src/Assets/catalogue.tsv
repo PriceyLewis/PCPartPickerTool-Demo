@@ -1,0 +1,131 @@
+Name	Brand	Category	SamplePriceGBP
+Ryzen 7 7800X3D	AMD	CPU	329.99
+Core i7-14700K	Intel	CPU	349.99
+GeForce RTX 4070 Super	NVIDIA	GPU	579.99
+Radeon RX 7800 XT	AMD	GPU	449.99
+Vengeance 32GB DDR5	Corsair	RAM	109.99
+MAG B650 Tomahawk WiFi	MSI	Motherboard	179.99
+TUF Gaming B650-PLUS	ASUS	Motherboard	169.99
+Ryzen 5 3600	AMD	CPU	69.99
+Ryzen 5 5500	AMD	CPU	94.99
+Ryzen 5 5600	AMD	CPU	119.99
+Ryzen 5 5600X	AMD	CPU	144.99
+Ryzen 7 5700X	AMD	CPU	169.99
+Ryzen 7 5800X	AMD	CPU	194.99
+Ryzen 9 5900X	AMD	CPU	219.99
+Ryzen 5 7600	AMD	CPU	244.99
+Ryzen 5 7600X	AMD	CPU	269.99
+Ryzen 7 7700	AMD	CPU	294.99
+Ryzen 7 7700X	AMD	CPU	319.99
+Ryzen 9 7900	AMD	CPU	344.99
+Ryzen 9 7950X	AMD	CPU	369.99
+Core i3-12100F	Intel	CPU	79.99
+Core i3-13100F	Intel	CPU	124.99
+Core i5-12400F	Intel	CPU	169.99
+Core i5-13400F	Intel	CPU	214.99
+Core i5-13600K	Intel	CPU	259.99
+Core i7-13700K	Intel	CPU	304.99
+GeForce GTX 1650	NVIDIA	GPU	129.99
+GeForce GTX 1660 Super	NVIDIA	GPU	194.99
+GeForce RTX 3050	NVIDIA	GPU	259.99
+GeForce RTX 3060	NVIDIA	GPU	324.99
+GeForce RTX 3060 Ti	NVIDIA	GPU	389.99
+GeForce RTX 3070	NVIDIA	GPU	454.99
+GeForce RTX 3070 Ti	NVIDIA	GPU	519.99
+GeForce RTX 3080	NVIDIA	GPU	584.99
+GeForce RTX 4060	NVIDIA	GPU	649.99
+GeForce RTX 4060 Ti	NVIDIA	GPU	714.99
+GeForce RTX 4070	NVIDIA	GPU	779.99
+GeForce RTX 4070 Ti	NVIDIA	GPU	844.99
+GeForce RTX 4080	NVIDIA	GPU	909.99
+GeForce RTX 4090	NVIDIA	GPU	974.99
+Radeon RX 6400	AMD	GPU	99.99
+Radeon RX 6500 XT	AMD	GPU	164.99
+Radeon RX 6600	AMD	GPU	229.99
+Radeon RX 6650 XT	AMD	GPU	294.99
+Radeon RX 6700 XT	AMD	GPU	359.99
+Radeon RX 6750 XT	AMD	GPU	424.99
+Radeon RX 7600	AMD	GPU	489.99
+Radeon RX 7700 XT	AMD	GPU	554.99
+Radeon RX 7900 XT	AMD	GPU	619.99
+Radeon RX 7900 XTX	AMD	GPU	684.99
+B450 Tomahawk MAX	MSI	Motherboard	79.99
+B550-A PRO	MSI	Motherboard	104.99
+MAG B550 Tomahawk	MSI	Motherboard	129.99
+PRO B650-P WiFi	MSI	Motherboard	154.99
+MAG X670E Tomahawk WiFi	MSI	Motherboard	179.99
+PRO B760-P WiFi DDR4	MSI	Motherboard	204.99
+MAG Z790 Tomahawk WiFi	MSI	Motherboard	229.99
+Prime B450M-A II	ASUS	Motherboard	74.99
+TUF Gaming B550-PLUS	ASUS	Motherboard	104.99
+ROG Strix B550-F Gaming WiFi II	ASUS	Motherboard	134.99
+Prime B650-PLUS	ASUS	Motherboard	164.99
+TUF Gaming X670E-PLUS WiFi	ASUS	Motherboard	194.99
+Prime B660-PLUS D4	ASUS	Motherboard	224.99
+TUF Gaming B760-PLUS WiFi	ASUS	Motherboard	254.99
+ROG Strix Z790-E Gaming WiFi	ASUS	Motherboard	284.99
+Vengeance LPX 16GB DDR4	Corsair	RAM	34.99
+Vengeance LPX 32GB DDR4	Corsair	RAM	54.99
+Vengeance RGB Pro 16GB DDR4	Corsair	RAM	74.99
+Vengeance RGB Pro 32GB DDR4	Corsair	RAM	94.99
+Vengeance 64GB DDR5	Corsair	RAM	114.99
+Fury Beast 16GB DDR4	Kingston	RAM	39.99
+Fury Beast 32GB DDR4	Kingston	RAM	61.99
+Fury Beast 32GB DDR5	Kingston	RAM	83.99
+Fury Beast 64GB DDR5	Kingston	RAM	105.99
+Fury Renegade 32GB DDR5	Kingston	RAM	127.99
+Pro 16GB DDR4	Crucial	RAM	29.99
+Pro 32GB DDR4	Crucial	RAM	52.99
+Pro 32GB DDR5	Crucial	RAM	75.99
+Pro 64GB DDR5	Crucial	RAM	98.99
+870 EVO 500GB SATA SSD	Samsung	Storage	44.99
+870 EVO 1TB SATA SSD	Samsung	Storage	69.99
+970 EVO Plus 1TB NVMe SSD	Samsung	Storage	94.99
+980 Pro 1TB NVMe SSD	Samsung	Storage	119.99
+990 Pro 2TB NVMe SSD	Samsung	Storage	144.99
+Blue SN570 500GB NVMe SSD	WD	Storage	34.99
+Blue SN580 1TB NVMe SSD	WD	Storage	54.99
+Black SN770 1TB NVMe SSD	WD	Storage	74.99
+Black SN850X 2TB NVMe SSD	WD	Storage	94.99
+Blue 2TB HDD	WD	Storage	114.99
+BX500 500GB SATA SSD	Crucial	Storage	29.99
+MX500 1TB SATA SSD	Crucial	Storage	51.99
+P3 1TB NVMe SSD	Crucial	Storage	73.99
+P3 Plus 2TB NVMe SSD	Crucial	Storage	95.99
+T500 2TB NVMe SSD	Crucial	Storage	117.99
+4000D Airflow Case	Corsair	Case	69.99
+5000D Airflow Case	Corsair	Case	89.99
+3000D Airflow Case	Corsair	Case	109.99
+iCUE 4000X RGB Case	Corsair	Case	129.99
+H5 Flow Case	NZXT	Case	79.99
+H7 Flow Case	NZXT	Case	109.99
+H9 Flow Case	NZXT	Case	139.99
+Pop Air Case	Fractal	Case	74.99
+North Case	Fractal	Case	109.99
+Meshify 2 Case	Fractal	Case	144.99
+CX550 PSU	Corsair	PSU	49.99
+CX650 PSU	Corsair	PSU	69.99
+RM650x PSU	Corsair	PSU	89.99
+RM750x PSU	Corsair	PSU	109.99
+RM850x PSU	Corsair	PSU	129.99
+RM1000x PSU	Corsair	PSU	149.99
+Focus GX-650 PSU	Seasonic	PSU	89.99
+Focus GX-750 PSU	Seasonic	PSU	109.99
+Focus GX-850 PSU	Seasonic	PSU	129.99
+Focus GX-1000 PSU	Seasonic	PSU	149.99
+NH-U12S Cooler	Noctua	Cooling	59.99
+NH-U12A Cooler	Noctua	Cooling	79.99
+NH-D15 Cooler	Noctua	Cooling	99.99
+Freezer 34 eSports Duo Cooler	Arctic	Cooling	29.99
+Freezer 36 Cooler	Arctic	Cooling	49.99
+Liquid Freezer III 240 Cooler	Arctic	Cooling	69.99
+Liquid Freezer III 360 Cooler	Arctic	Cooling	89.99
+Pure Rock 2 Cooler	be quiet!	Cooling	34.99
+Dark Rock 4 Cooler	be quiet!	Cooling	59.99
+Dark Rock Pro 4 Cooler	be quiet!	Cooling	84.99
+Ryzen 9 7900X	AMD	CPU	359.99
+Kingston 1TB NVMe SSD	Kingston	Storage	54.99
+Samsung 980 Pro 2TB SSD	Samsung	Storage	139.99
+ASUS ROG STRIX B650E	ASUS	Motherboard	249.99
+MSI MAG B660M Mortar	MSI	Motherboard	149.99
+Core i9-13900K	Intel	CPU	479.99
