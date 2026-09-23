@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Run Lewis Price's Java Swing PC Part Picker portfolio project directly in your browser.">
+  <title>PC Part Picker | Browser Demo</title>
+  <script src="https://cjrtnc.leaningtech.com/4.3/loader.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #080b12;
+      color: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #080b12; }
+    body { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: .8rem 1rem; border-bottom: 1px solid #263041; background: #0f1623;
+    }
+    .title { display: flex; flex-direction: column; gap: .18rem; }
+    .title strong { font-size: .98rem; }
+    .title span, footer { color: #aeb8c8; font-size: .78rem; }
+    .actions { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; justify-content: flex-end; }
+    a {
+      border: 1px solid #344156; border-radius: .65rem; padding: .48rem .7rem;
+      background: #172133; color: #f8fafc; text-decoration: none; font-size: .82rem;
+    }
+    a:hover { border-color: #60a5fa; }
+    #status { color: #93c5fd; font-size: .8rem; }
+    main { min-height: 0; position: relative; overflow: hidden; }
+    #container { width: 100%; height: 100%; min-height: 720px; background: #0b1019; }
+    #loading {
+      position: absolute; z-index: 20; inset: 0; display: grid; place-items: center;
+      pointer-events: none; background: radial-gradient(circle at center, rgba(20,48,86,.96), rgba(8,11,18,.99));
+      transition: opacity .35s ease;
+    }
+    #loading.hidden { opacity: 0; }
+    .loader-card { max-width: 550px; margin: 1rem; padding: 1.5rem; text-align: center; }
+    .spinner {
+      width: 38px; height: 38px; margin: 0 auto 1rem; border: 3px solid #334155;
+      border-top-color: #60a5fa; border-radius: 50%; animation: spin .8s linear infinite;
+    }
+    .loader-card h1 { font-size: 1.15rem; margin: 0 0 .5rem; }
+    .loader-card p { color: #aeb8c8; line-height: 1.55; margin: .35rem 0; font-size: .9rem; }
+    #error { color: #fecaca; }
+    footer {
+      padding: .55rem 1rem; border-top: 1px solid #263041; background: #0f1623;
+      display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    footer a { border: 0; padding: 0; background: none; color: #93c5fd; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 760px) {
+      header { align-items: flex-start; flex-direction: column; }
+      .actions { justify-content: flex-start; }
+      /* The home Swing window is 700x420; keep enough room without leaving a large empty band on phones. */
+      #container { min-height: 600px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <strong>PC Part Picker</strong>
+      <span>Java Swing coursework portfolio demo · browser-safe data mode</span>
+    </div>
+    <div class="actions">
+      <span id="status">Preparing Java 17 runtime…</span>
+      <a href="https://github.com/PriceyLewis/PCPartPickerTool-Demo" target="_blank" rel="noreferrer">View source ↗</a>
+      <a href="https://priceylewis.github.io/projects/pc-part-picker.html">Case study ↗</a>
+    </div>
+  </header>
+
+  <main>
+    <div id="container" aria-label="PC Part Picker Java Swing application"></div>
+    <div id="loading">
+      <div class="loader-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <h1>Starting the Java application</h1>
+        <p>The first launch downloads the browser Java runtime, so it may take longer than a normal web page.</p>
+        <p>No Java installation, API key or database setup is required.</p>
+        <p id="error" role="alert"></p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Browser mode opens with disposable sample inventory, reviews, history and a demo user. The desktop build retains Microsoft Access persistence.</span>
+    <span>Browser Java runtime powered by <a href="https://cheerpj.com/" target="_blank" rel="noreferrer">CheerpJ Community Edition</a>.</span>
+  </footer>
+
+  <script type="module">
+    const status = document.getElementById("status");
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const container = document.getElementById("container");
+
+    function jarPathForCurrentSite() {
+      const path = window.location.pathname;
+      const directory = path.endsWith("/") ? path : path.slice(0, path.lastIndexOf("/") + 1);
+      return "/app" + directory + "pc-part-picker-demo.jar";
+    }
+
+    async function Java_BrowserBridge_notifyReady(lib, stage) {
+      const readyStage = String(stage || "ready");
+      window.__pcPartDemoStage = readyStage;
+      if (readyStage === "home") {
+        window.__pcPartDemoJavaReady = true;
+        loading.classList.add("hidden");
+        setTimeout(() => loading.remove(), 400);
+        status.textContent = "Browser demo running";
+      } else {
+        status.textContent = "Starting Java app · " + readyStage;
+      }
+    }
+
+    try {
+      const javaProperties = ["portfolio.browser=true"];
+      if (window.innerWidth <= 700) {
+        javaProperties.push("portfolio.compact=true");
+      }
+
+      await cheerpjInit({
+        version: 17,
+        status: "splash",
+        clipboardMode: "system",
+        javaProperties,
+        natives: {
+          Java_BrowserBridge_notifyReady,
+        },
+      });
+
+      window.__pcPartDemoRuntimeReady = true;
+      status.textContent = "Launching Swing application…";
+      const display = cheerpjCreateDisplay(-1, -1, container);
+      display.id = "cheerpj-display";
+      window.__pcPartDemoDisplayCreated = true;
+      window.__pcPartDemoLaunchStarted = true;
+
+      window.__pcPartDemoRunJarCalled = true;
+      const runPromise = cheerpjRunJar(jarPathForCurrentSite());
+      window.__pcPartDemoRunPromise = runPromise;
+
+      const readinessTimeout = setTimeout(() => {
+        if (!window.__pcPartDemoJavaReady && !window.__pcPartDemoError) {
+          error.textContent = "The Java application is taking longer than expected to start. Refresh the page if it does not appear.";
+          status.textContent = "Still starting…";
+        }
+      }, 90000);
+
+      runPromise.finally(() => clearTimeout(readinessTimeout));
+      runPromise.catch((launchError) => {
+        console.error("PC Part Picker failed to launch", launchError);
+        loading.classList.remove("hidden");
+        error.textContent = "The Java application could not start. Refresh the page or use the source-code link above.";
+        status.textContent = "Launch failed";
+        window.__pcPartDemoError = String(launchError);
+      });
+    } catch (launchError) {
+      console.error("CheerpJ initialisation failed", launchError);
+      error.textContent = "The browser Java runtime could not initialise. Refresh the page and try again.";
+      status.textContent = "Runtime failed";
+      window.__pcPartDemoError = String(launchError);
+    }
+  </script>
+<p style="text-align:center;color:#94a3b8;font:14px sans-serif;padding:12px">130 sample components · Fictional prices, stock and seeded reviews · No live retailer data or compatibility validation</p>
+</body>
+</html>
